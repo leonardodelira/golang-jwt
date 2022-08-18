@@ -2,13 +2,20 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	routes "github.com/leonardodelira/gojwt/routes"
 )
 
 func main() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	
 	port := os.Getenv("PORT")
 
 	if port == "" {
@@ -20,8 +27,6 @@ func main() {
 
 	routes.AuthRoutes(router)
 	routes.UserRoutes(router)
-	router.GET("/test", func(c *gin.Context){
-		c.JSON(200, gin.H{"sucess": "ok"})
-	})
+
 	router.Run(fmt.Sprintf(":%v", port))
 }
